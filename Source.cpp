@@ -41,7 +41,8 @@ class MovieDatabase
 public:
     vector<Movie> movies;
     vector<Movie> watchlist;
-    void loadFromFile(string filename) {
+    void loadFromFile(string filename)
+    {
         ifstream file(filename);
         string line;
         while (getline(file, line)) {
@@ -69,31 +70,54 @@ public:
         }
     }
 };
+class person
+{
+public:
+    string name;
+    string email_id;
+};
+class user: public person, public MovieDatabase
+{
+    //empty no content
+};
 int main()
 {
-    MovieDatabase db;
+    user db;
     db.loadFromFile("movies.csv");
-    cout << "*** WELCOME TO MOVIE WATCHLIST CREATOR *****" << "\n\n" ;
-    cout << "| " << setw(5) << "CODE" << "| " << setw(75) << "TITLE" << " | " << setw(15) << "RATING" << " |" << endl;
-    for (vector<Movie>::iterator i = db.movies.begin(); i != db.movies.end(); ++i)
-    {
-        cout << "| " << setw(5) << i->code << "| " << setw(75) << i->title << " | " << setw(15) << i->rating << " |" << endl;
-    }
+    cout << "\t\t*** WELCOME TO MOVIE WATCHLIST CREATOR *****\t\t" << "\n\n" ;
+    cout << "Please Enter your name : ";
+    cin.ignore();
+    getline(cin, db.name, '\n');
+    cout << "Enter your Email ID : ";
+    cin.ignore();
+    getline(cin, db.email_id, '\n');
+
     int option;
     do
     {
         cout << "Enter 0 to End the program.\n";
-        cout << "Enter 1 to apply filters to the list.\n";
-        cout << "Enter 2 to enter movies in the watchlist.\n";
-        cout << "Enter 3 to display your watchist.\n";
+        cout << "Enter 1 to display the list of movies.\n";
+        cout << "Enter 2 to apply filters to the list.\n";
+        cout << "Enter 3 to enter movies in the watchlist.\n";
+        cout << "Enter 4 to display your watchist.\n";
+        cout << "Enter 5 to mail your watchlist to yourself.\n";
+        cout << "Enter 6 to mail your watchlist to your friend.\n";
         cout << "Enter your option : ";
         cin >> option;
         if(option == 0)
         {
-            cout << "\n\n ***** ADIOS AMIGOS *****";
+            cout << "\t\t***** ADIOS AMIGOS *****\t\t\n";
             return 0;
         }
         else if(option == 1)
+        {
+            cout << "| " << setw(5) << "CODE" << "| " << setw(75) << "TITLE" << " | " << setw(15) << "RATING" << " |" << endl;
+            for (vector<Movie>::iterator i = db.movies.begin(); i != db.movies.end(); ++i)
+            {
+                cout << "| " << setw(5) << i->code << "| " << setw(75) << i->title << " | " << setw(15) << i->rating << " |" << endl;
+            }
+        }
+        else if(option == 2)
         {
             int option1;
             do
@@ -107,7 +131,10 @@ int main()
                 cin >> option1;
                 cin.ignore();
                 if(option1 == 0)
+                {
+                    cout << "\n\n";
                     break;
+                }
                 if(option1 == 1)
                 {
                     double rate;
@@ -180,7 +207,7 @@ int main()
             }
             while(option1 > 0 || option1 < 4);
         }
-        else if(option == 2)
+        else if(option == 3)
         {
             vector<int> movieCodes;
             cout << "Enter movie codes (press Ctrl+D to finish):" << endl;
@@ -202,15 +229,16 @@ int main()
                 }
             }
         }
-        else if(option == 3)
+        else if(option == 4)
         {
             if(db.watchlist.size() == 0)
             {
                 cout << "I SEE YOUR WATCHLIST IS EMPTY!\n\n";
+                cout << "Enter 3 to add movies to your watchlist.\n\n";
             }
             else
             {
-                cout << "\n\n***** YOUR WATCHLIST *****\n\n";
+                cout << "\t\t***** YOUR WATCHLIST *****\t\t\n";
                 cout << "| " << setw(5) << "CODE" << "| " << setw(75) << "TITLE" << " | " << setw(15) << "RATING" << " |" << endl;
                 for (vector<Movie>::iterator i = db.watchlist.begin(); i != db.watchlist.end(); ++i)
                 {
@@ -218,7 +246,22 @@ int main()
                 }
             }
         }
+        else if(option == 5)
+        {
+            cout << "\t\t*****YOUR WATCHLIST IS MAILED TO YOU SUCCESSFULLY *****\t\t\n\n";
+        }
+        else if(option == 6)
+        {
+            person recipient;
+            cout << "Enter your friends name : ";
+            cin.ignore();
+            getline(cin, recipient.name, '\n');
+            cout << "Enter your friends Email ID : ";
+            cin.ignore();
+            getline(cin, recipient.email_id, '\n');
+            cout << "\t\t***** YOUR WATCHLIST IS MAILED TO " << recipient.name << " *****\t\t\n\n";
+        }
     }
-    while(option > 0 || option < 3);
+    while(option > 0 || option < 6);
     return 0;
 }
